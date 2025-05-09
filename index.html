@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>My Portfolio</title>
+  <link rel="stylesheet" href="styles.css" />
+  <style>
+    .section {
+      opacity: 0;
+      transform: translateX(100%);
+      transition: opacity 0.5s ease, transform 0.5s ease;
+      position: absolute;
+      width: 100%;
+      top: 120px;
+      left: 0;
+      padding: 2rem;
+      box-sizing: border-box;
+    }
+
+    .section.active {
+      opacity: 1;
+      transform: translateX(0);
+      position: relative;
+    }
+
+    main {
+      position: relative;
+      min-height: 60vh;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>Welcome to My Portfolio</h1>
+    <nav>
+      <ul>
+        <li><a href="#" data-section="home">Home</a></li>
+        <li><a href="#" data-section="film">Film</a></li>
+        <li><a href="#" data-section="games">Games</a></li>
+        <li><a href="#" data-section="dogs">Dogs</a></li>
+        <li><a href="#" data-section="resume">Resume</a></li>
+      </ul>
+    </nav>
+  </header>
+
+  <main>
+    <section id="home" class="section active">
+      <img src="self.jpg" alt="Photo of me" class="self-photo" />
+      <p>
+        Hello! I'm [Your Name], a passionate creator who loves filmmaking,
+        game development, and dogs. This portfolio showcases my creative
+        journey and professional background.
+      </p>
+    </section>
+
+    <section id="film" class="section">
+      <h2>Film Projects</h2>
+      <p>Descriptions and links to your short films, clips, or reels go here.</p>
+    </section>
+
+    <section id="games" class="section">
+      <h2>Game Projects</h2>
+      <p>Showcase playable demos, screenshots, and descriptions of your games.</p>
+    </section>
+
+    <section id="dogs" class="section">
+      <h2>My Dogs</h2>
+      <p>Photos, fun stories, or training info about your dogs go here.</p>
+    </section>
+
+    <section id="resume" class="section">
+      <h2>Professional Resume</h2>
+      <p>Include your education, experience, and skills. Link to a downloadable PDF if you'd like.</p>
+    </section>
+  </main>
+
+  <footer>
+    <p>&copy; 2025 [Your Name]. All rights reserved.</p>
+  </footer>
+
+  <script>
+    document.addEventListener("DOMContentLoaded", () => {
+      const links = document.querySelectorAll("nav a[data-section]");
+      const sections = document.querySelectorAll("main .section");
+
+      links.forEach(link => {
+        link.addEventListener("click", e => {
+          e.preventDefault();
+          const targetId = link.getAttribute("data-section");
+
+          sections.forEach(section => {
+            section.classList.remove("active");
+          });
+
+          const targetSection = document.getElementById(targetId);
+          if (targetSection) {
+            targetSection.classList.add("active");
+          }
+        });
+      });
+    });
+  </script>
+</body>
+</html>
