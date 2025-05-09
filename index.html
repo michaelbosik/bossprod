@@ -1,105 +1,338 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-  <title>My Portfolio</title>
-  <link rel="stylesheet" href="styles.css" />
-  <style>
-    .section {
-      opacity: 0;
-      transform: translateX(100%);
-      transition: opacity 0.5s ease, transform 0.5s ease;
-      position: absolute;
-      width: 100%;
-      top: 120px;
-      left: 0;
-      padding: 2rem;
-      box-sizing: border-box;
-    }
-
-    .section.active {
-      opacity: 1;
-      transform: translateX(0);
-      position: relative;
-    }
-
-    main {
-      position: relative;
-      min-height: 60vh;
-    }
-  </style>
-</head>
-<body>
-  <header>
-    <h1>Welcome to My Portfolio</h1>
-    <nav>
-      <ul>
-        <li><a href="#" data-section="home">Home</a></li>
-        <li><a href="#" data-section="film">Film</a></li>
-        <li><a href="#" data-section="games">Games</a></li>
-        <li><a href="#" data-section="dogs">Dogs</a></li>
-        <li><a href="#" data-section="resume">Resume</a></li>
-      </ul>
-    </nav>
-  </header>
-
-  <main>
-    <section id="home" class="section active">
-      <img src="self.jpg" alt="Photo of me" class="self-photo" />
-      <p>
-        Hello! I'm [Your Name], a passionate creator who loves filmmaking,
-        game development, and dogs. This portfolio showcases my creative
-        journey and professional background.
-      </p>
-    </section>
-
-    <section id="film" class="section">
-      <h2>Film Projects</h2>
-      <p>Descriptions and links to your short films, clips, or reels go here.</p>
-    </section>
-
-    <section id="games" class="section">
-      <h2>Game Projects</h2>
-      <p>Showcase playable demos, screenshots, and descriptions of your games.</p>
-    </section>
-
-    <section id="dogs" class="section">
-      <h2>My Dogs</h2>
-      <p>Photos, fun stories, or training info about your dogs go here.</p>
-    </section>
-
-    <section id="resume" class="section">
-      <h2>Professional Resume</h2>
-      <p>Include your education, experience, and skills. Link to a downloadable PDF if you'd like.</p>
-    </section>
-  </main>
-
-  <footer>
-    <p>&copy; 2025 [Your Name]. All rights reserved.</p>
-  </footer>
-
-  <script>
-    document.addEventListener("DOMContentLoaded", () => {
-      const links = document.querySelectorAll("nav a[data-section]");
-      const sections = document.querySelectorAll("main .section");
-
-      links.forEach(link => {
-        link.addEventListener("click", e => {
-          e.preventDefault();
-          const targetId = link.getAttribute("data-section");
-
-          sections.forEach(section => {
-            section.classList.remove("active");
-          });
-
-          const targetSection = document.getElementById(targetId);
-          if (targetSection) {
-            targetSection.classList.add("active");
-          }
-        });
-      });
-    });
-  </script>
-</body>
+   <head>
+      <meta charset="UTF-8" />
+      <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+      <title>My Portfolio</title>
+      <style>
+         :root {
+         --green-light: #A8D5BA;
+         --beige-light: #F1E3D3;
+         --blue-light: #A2C8E1;
+         --green-dark: #6C9E6F;
+         --blue-dark: #3A6F91;
+         --gray-light: #F5F5F5;
+         --text-color: #333;
+         --link-color: #3A6F91;
+         --link-hover: #6C9E6F;
+         }
+         .dark-mode {
+         --green-light: #6C9E6F;
+         --beige-light: #F1E3D3;
+         --blue-light: #A2C8E1;
+         --green-dark: #A8D5BA;
+         --blue-dark: #A2C8E1;
+         --gray-light: #121212;
+         --text-color: #F1E3D3;
+         --link-color: #6C9E6F;
+         --link-hover: #A2C8E1;
+         }
+         body {
+         margin: 0;
+         font-family: Arial, sans-serif;
+         line-height: 1.6;
+         background-color: var(--gray-light);
+         color: var(--text-color);
+         padding: 0;
+         }
+         header {
+         padding: 1rem;
+         background-color: var(--beige-light);
+         text-align: center;
+         position: relative;
+         }
+         nav ul {
+         display: flex;
+         flex-wrap: wrap;
+         justify-content: center;
+         list-style: none;
+         padding: 0;
+         margin: 0;
+         gap: 1rem;
+         }
+         nav li {
+         margin: 0;
+         }
+         nav a {
+         text-decoration: none;
+         color: var(--link-color);
+         transition: color 0.3s ease, transform 0.3s ease, background-color 0.3s ease;
+         font-weight: bold;
+         padding: 0.5rem 1rem;
+         border-radius: 5px;
+         background-color: rgba(0, 0, 0, 0.1); /* Light background */
+         }
+         nav a:hover {
+         color: var(--link-hover);
+         transform: scale(1.1);
+         background-color: var(--green-light); /* Hover background */
+         }
+         .hamburger {
+         display: none;
+         flex-direction: column;
+         gap: 5px;
+         position: absolute;
+         top: 1rem;
+         right: 3rem;
+         cursor: pointer;
+         }
+         .hamburger div {
+         width: 25px;
+         height: 3px;
+         background-color: #333;
+         }
+         .mobile-nav {
+         display: none;
+         flex-direction: column;
+         align-items: center;
+         gap: 1rem;
+         background-color: var(--beige-light);
+         padding: 1rem;
+         }
+         .mobile-nav.active {
+         display: flex;
+         }
+         .section {
+         display: flex;
+         position: absolute;
+         justify-content: center;
+         align-items: center;
+         opacity: 0;
+         transition: opacity 0.5s ease;
+         padding: 2rem;
+         box-sizing: border-box;
+         width: 100%;
+         }
+         .section.active {
+         opacity: 1;
+         pointer-events: auto;
+         }
+         main {
+         position: relative;
+         min-height: 80vh; /* Allow some more space to avoid content clipping */
+         display: flex;
+         flex-direction: column;
+         justify-content: flex-start;
+         padding-bottom: 2rem;
+         box-sizing: border-box;
+         }
+         .content-container {
+         width: 66%;
+         display: flex;
+         flex-direction: column;
+         align-items: center;
+         justify-content: center;
+         }
+         .self-photo {
+         max-width: 100%;
+         height: auto;
+         display: block;
+         margin: 0 auto 1rem;
+         }
+         .game-showcase {
+         display: flex;
+         gap: 2rem;
+         flex-wrap: wrap;
+         align-items: flex-start;
+         }
+         .carousel {
+         display: flex;
+         overflow-x: auto;
+         gap: 1rem;
+         scroll-snap-type: x mandatory;
+         width: 100%;
+         max-width: 400px;
+         }
+         .carousel img {
+         flex: 0 0 auto;
+         width: 100%;
+         max-width: 400px;
+         scroll-snap-align: start;
+         border-radius: 8px;
+         }
+         .game-description {
+         flex: 1 1 300px;
+         }
+         footer {
+         text-align: center;
+         padding: 1rem;
+         background-color: var(--beige-light);
+         }
+         @media (max-width: 768px) {
+         nav ul.desktop-nav {
+         display: none;
+         }
+         .hamburger {
+         display: flex;
+         }
+         .section {
+         padding: 1rem;
+         top: 100px;
+         }
+         .game-showcase {
+         flex-direction: column;
+         }
+         .content-container {
+         width: 90%;
+         }
+         }
+         .film-project {
+         margin-bottom: 2rem;
+         text-align: center;
+         }
+         .film-project h3 {
+         font-size: 1.5rem;
+         color: var(--blue-dark);
+         margin-bottom: 1rem;
+         }
+         .film-video iframe {
+         width: auto;
+         height: auto;
+         border-radius: 8px;
+         margin-bottom: 1rem;
+         }
+         .film-description {
+         font-size: 1rem;
+         color: var(--text-color);
+         line-height: 1.6;
+         max-width: 800px;
+         margin: 0 auto;
+         }
+      </style>
+   </head>
+   <body>
+      <header>
+         <h1>Welcome to My Portfolio</h1>
+         <div class="hamburger" id="hamburger">
+            <div></div>
+            <div></div>
+            <div></div>
+         </div>
+         <nav>
+            <ul class="desktop-nav">
+               <li><a href="#" data-section="home">Home</a></li>
+               <li><a href="#" data-section="film">Film</a></li>
+               <li><a href="#" data-section="games">Games</a></li>
+               <li><a href="#" data-section="dogs">Dogs</a></li>
+               <li><a href="#" data-section="resume">Resume</a></li>
+            </ul>
+            <ul class="mobile-nav" id="mobile-nav">
+               <li><a href="#" data-section="home">Home</a></li>
+               <li><a href="#" data-section="film">Film</a></li>
+               <li><a href="#" data-section="games">Games</a></li>
+               <li><a href="#" data-section="dogs">Dogs</a></li>
+               <li><a href="#" data-section="resume">Resume</a></li>
+            </ul>
+         </nav>
+      </header>
+      <main>
+         <section id="home" class="section active">
+            <div class="content-container">
+               <img src="self.jpg" alt="Photo of me" class="self-photo" />
+               <p>
+                  Hello! I'm [Your Name], a passionate creator who loves filmmaking,
+                  game development, and dogs. This portfolio showcases my creative
+                  journey and professional background.
+               </p>
+            </div>
+         </section>
+         <section id="film" class="section">
+            <div class="content-container">
+            <h2>Film Projects</h2>
+            <p>Descriptions and links to your short films, clips, or reels go here.</p>
+            <!-- Example Film Project -->
+            <div class="film-project">
+               <h3>Awesome Film Title</h3>
+               <!-- YouTube Embedded Video -->
+               <div class="film-video">
+                  <iframe 
+                     width="560" 
+                     height="315" 
+                     src="" 
+                     title="YouTube video player" 
+                     frameborder="0" 
+                     allow="accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture" 
+                     allowfullscreen>
+                  </iframe>
+               </div>
+               <!-- Description of the Film -->
+               <p class="film-description">
+                  This is a description of the film. It highlights the concept, director's vision, production process, and anything unique about the film. This could be used to showcase your film-making skills.
+               </p>
+            </div>
+         </section>
+         <section id="games" class="section">
+            <div class="content-container">
+               <h2>Game Projects</h2>
+               <div class="game-showcase">
+                  <div class="carousel">
+                     <img src="game1a.jpg" alt="Game screenshot 1" />
+                     <img src="game1b.jpg" alt="Game screenshot 2" />
+                     <img src="game1c.jpg" alt="Game screenshot 3" />
+                  </div>
+                  <div class="game-description">
+                     <h3>Awesome Game Title</h3>
+                     <p>This is a description of the game. It highlights the gameplay, mechanics, tools used, and what makes it unique or interesting. Perfect for showcasing your skills and creativity.</p>
+                  </div>
+               </div>
+            </div>
+         </section>
+         <section id="dogs" class="section">
+            <div class="content-container">
+               <h2>My Dogs</h2>
+               <p>Photos, fun stories, or training info about your dogs go here.</p>
+            </div>
+         </section>
+         <section id="resume" class="section">
+            <div class="content-container">
+               <h2>Professional Resume</h2>
+               <p>Include your education, experience, and skills. Link to a downloadable PDF if you'd like.</p>
+            </div>
+         </section>
+      </main>
+      <footer>
+         <p>&copy; 2025 [Your Name]. All rights reserved.</p>
+      </footer>
+      <script>
+         document.addEventListener("DOMContentLoaded", () => {
+           const links = document.querySelectorAll("nav a[data-section]");
+           const sections = document.querySelectorAll("main .section");
+           const hamburger = document.getElementById("hamburger");
+           const mobileNav = document.getElementById("mobile-nav");
+           let currentSection = document.querySelector(".section.active");
+         
+           if (!currentSection) {
+             alert("No active section found. Defaulting to Home.");
+             currentSection = document.getElementById("home");
+             currentSection.classList.add("active");
+           }
+         
+           links.forEach(link => {
+             link.addEventListener("click", e => {
+               e.preventDefault();
+               const targetId = link.getAttribute("data-section");
+               const targetSection = document.getElementById(targetId);
+         
+               if (targetSection && targetSection !== currentSection) {
+                 currentSection.classList.remove("active");
+                 currentSection.addEventListener("transitionend", function handleFadeOut() {
+                   currentSection.removeEventListener("transitionend", handleFadeOut);
+                   sections.forEach(section => section.classList.remove("active"));
+                   targetSection.classList.add("active");
+                   currentSection = targetSection;
+                 }, { once: true });
+               }
+         
+               if (mobileNav.classList.contains("active")) {
+                 mobileNav.classList.remove("active");
+               }
+             });
+           });
+         
+           hamburger.addEventListener("click", () => {
+             mobileNav.classList.toggle("active");
+           });
+         });
+      </script>
+   </body>
 </html>
