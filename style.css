@@ -50,7 +50,7 @@ nav ul {
   display: flex;
   justify-content: center;
   list-style: none;
-  /* gap: 1rem; */
+  gap: 0.25rem;
   padding: 0;
   margin: 0;
 }
