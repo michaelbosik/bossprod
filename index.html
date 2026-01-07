@@ -1,19 +1,23 @@
-<!-- <!DOCTYPE html>
+<!DOCTYPE html>
 <html lang="en">
   <head>
     <meta charset="UTF-8" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="viewport" content="width=device-width, initial-scale=1" />
+
     <title>Michael Bosik</title>
+
     <link
       href="https://fonts.googleapis.com/css2?family=Raleway"
       rel="stylesheet"
     />
     <link href="style.css" rel="stylesheet" />
+
   </head>
   <body>
+
     <header>
       <div class="nav-container">
-        <h1>Film Editor and Animal Caretaker</h1>
+        <h1>Media Producer and Software Engineer</h1>
         <div class="hamburger" onclick="toggleMenu()">
           <div></div>
           <div></div>
@@ -24,7 +28,7 @@
         <ul id="navLinks">
           <li><a href="#about" class="nav-link">About</a></li>
           <li><a href="#media" class="nav-link">Media and Film</a></li>
-          <li><a href="#animals" class="nav-link">Animal Care</a></li>
+          <!-- <li><a href="#animals" class="nav-link">Animal Care</a></li> -->
           <li><a href="#tech" class="nav-link">Code and Tech</a></li>
         </ul>
       </nav>
@@ -35,7 +39,7 @@
         <div class="section-overlay"></div>
         <div class="content-container">
           <img
-            src="self.jpg"
+            src="images/self.jpg"
             alt="no-image"
             class="self-photo"
             style="max-width: 200px; border-radius: 50%; margin-bottom: 1rem"
@@ -65,10 +69,7 @@
           <div class="media-project">
             <h3>Seeds Of Stem</h3>
             <div class="media-project-content">
-              <iframe
-                src="https://www.youtube.com/embed/Aenj-Tktapc"
-                allowfullscreen
-              ></iframe>
+              <div class="video-placeholder" data-video-tag="seedsofstem"></div>
               <p>
                 Seeds of Stem is a curriculum structure for children to learn
                 valuable science, technicalogy and math concepts. I was hired to
@@ -82,22 +83,12 @@
             </div>
           </div>
           <div class="media-project">
-            <h3>Seeding 101</h3>
+            <h3>Schwamb</h3>
             <div class="media-project-content">
               <p>
-                This educational botany workshop was filmed live in front of a
-                participating audience. It was a challenging but unique
-                experience to be moving around during filming, actively
-                searching for a good shot of what the speaker was presenting;
-                not to mention with four different cameras! Editing this piece
-                in Adobe Premiere was quite fun. I was able to create multicam
-                nested sequences of the various camera angles and learn more in
-                depth about the features the software has to offer.
+
               </p>
-              <iframe
-                src="https://www.youtube.com/embed/BxzQb5ZoIsQ"
-                allowfullscreen
-              ></iframe>
+              <div class="video-placeholder" data-video-tag="schwamb"></div>
             </div>
           </div>
           <div class="media-project">
@@ -124,7 +115,7 @@
 
       <div class="divider"></div>
 
-      <section
+      <!-- <section
         id="animals"
         style="background-image: url('images/animals-bg.jpg')"
       >
@@ -139,7 +130,7 @@
         </div>
       </section>
 
-      <div class="divider"></div>
+      <div class="divider"></div> -->
 
       <section id="tech" style="background-image: url('images/tech-bg.jpg')">
         <div class="section-overlay"></div>
@@ -158,6 +149,52 @@
       <p>&copy; 2025 Michael Bosik. All rights reserved.</p>
     </footer>
 
+    <script>
+      (function(){
+      var EMBEDS = {
+        seedsofstem: 'https://www.youtube.com/embed/Aenj-Tktapc',
+        schwamb: 'https://www.youtube.com/embed/toAhX1-1f1Q?si=__TIw2tHp_RRfdXD'
+      };
+
+    function getMapping(){
+      try{
+        if(window.VIDEO_EMBEDS_OVERRIDE && typeof window.VIDEO_EMBEDS_OVERRIDE === 'object'){
+          return window.VIDEO_EMBEDS_OVERRIDE;
+        }
+      }catch(e){}
+      return EMBEDS;
+    }
+
+  function processMap(map){
+    Object.keys(map).forEach(function(tag){
+      var selector = '[data-video-tag="' + tag + '"]';
+      var nodes = document.querySelectorAll(selector);
+      nodes.forEach(function(node){
+        var width = node.getAttribute('data-video-width') || '560';
+        var height = node.getAttribute('data-video-height') || '315';
+        var url = map[tag];
+        if(!url) return;
+        var iframe = document.createElement('iframe');
+        iframe.setAttribute('src', url);
+        iframe.setAttribute('width', width);
+        iframe.setAttribute('height', height);
+        iframe.setAttribute('title', 'Video player for ' + tag);
+        iframe.setAttribute('frameborder', '0');
+        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
+        iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
+        iframe.setAttribute('allowfullscreen', '');
+        node.innerHTML = '';
+        node.appendChild(iframe);
+      });
+    });
+  }
+
+    document.addEventListener('DOMContentLoaded', function(){
+      var mapping = getMapping();
+      processMap(mapping);
+    });
+    })();
+    </script>
     <script>
       function toggleMenu() {
         const navLinks = document.getElementById("navLinks");
@@ -208,18 +245,5 @@
         observer.observe(container);
       });
     </script>
-  </body>
-</html> -->
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta http-equiv="refresh" content="0; url=https://www.youtube.com/@MichaelBosik" />
-    <script>
-      window.location.replace("https://www.youtube.com/@MichaelBosik");
-    </script>
-    <title>Redirecting...</title>
-  </head>
-  <body>
-    <p>If you're not redirected, <a href="https://www.youtube.com/@MichaelBosik">click here</a>.</p>
   </body>
 </html>
