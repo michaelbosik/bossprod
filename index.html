@@ -8,8 +8,7 @@
 
     <link
       href="https://fonts.googleapis.com/css2?family=Raleway"
-      rel="stylesheet"
-    />
+      rel="stylesheet" />
     <link href="style.css" rel="stylesheet" />
 
   </head>
@@ -28,7 +27,6 @@
         <ul id="navLinks">
           <li><a href="#about" class="nav-link">About</a></li>
           <li><a href="#media" class="nav-link">Media and Film</a></li>
-          <!-- <li><a href="#animals" class="nav-link">Animal Care</a></li> -->
           <li><a href="#tech" class="nav-link">Code and Tech</a></li>
         </ul>
       </nav>
@@ -42,13 +40,17 @@
             src="images/self.jpg"
             alt="no-image"
             class="self-photo"
-            style="max-width: 200px; border-radius: 50%; margin-bottom: 1rem"
-          />
-          <p>
-            Hello! I'm Michael, a passionate creator who loves filmmaking, game
-            development, and animals. This portfolio showcases my creative
-            journey and professional background.
-          </p>
+            style="max-width: 400px; border-radius: 5%; margin-bottom: 1rem" />
+          <p>Michael is a passionate filmmaker and video editor with over a
+            decade of experience working across the full spectrum of production
+            and post production. Skilled in Adobe Premiere Pro, DaVinci Resolve
+            and other editing platforms, he brings a creative eye and technical
+            precision to every project. Michael’s background includes extensive
+            hands-on work with cameras, lighting, and sound equipment, as well
+            as live shooting, post production, and tutoring others through the
+            filmmaking process. Whether behind the camera or in the edit suite,
+            he always strives to craft compelling visual stories and capture
+            beautiful imagery that engages and inspires.</p>
         </div>
       </section>
 
@@ -60,11 +62,14 @@
           <h2>Media and Film</h2>
           <p>
             Growing up I have always been infatuated with cameras and media
-            equipmet. I wanted to persue a career in the film industry so I exposed myself to a tremendous amount of equipment,
-            software, and practices in the media field. In highschool I founded the multimedia club and worked as
+            equipmet. I wanted to persue a career in the film industry so I
+            exposed myself to a tremendous amount of equipment,
+            software, and practices in the media field. In highschool I founded
+            the multimedia club and worked as
             a sports videographer for local access television. Later, in
             college, I managed and taught students about the equipment in the
-            media lab. Now, I work as a film editor at B-Roll Films, a Boston based production company.
+            media lab. Now, I work as a film editor at B-Roll Films, a Boston
+            based production company.
           </p>
           <div class="media-project">
             <h3>Seeds Of Stem</h3>
@@ -94,10 +99,7 @@
           <div class="media-project">
             <h3>Alien - Scene Recreation</h3>
             <div class="media-project-content">
-              <iframe
-                src="https://www.youtube.com/embed/pvWnnvu02no"
-                allowfullscreen
-              ></iframe>
+              <div class="video-placeholder" data-video-tag="alien"></div>
               <p>
                 This shot for shot recreation of the classic sci fi thriller
                 Alien, was by far the most fun I've had on a video project so
@@ -150,10 +152,111 @@
     </footer>
 
     <script>
+      var EMBEDS = {
+        seedsofstem: 'https://www.youtube.com/embed/Aenj-Tktapc',
+        schwamb: 'https://www.youtube.com/embed/toAhX1-1f1Q?si=__TIw2tHp_RRfdXD',
+        alien: 'https://www.youtube.com/embed/pvWnnvu02no'
+      };
+
+    function getMapping(){
+      try{
+        if(window.VIDEO_EMBEDS_OVERRIDE && typeof window.VIDEO_EMBEDS_OVERRIDE === 'object'){
+          return window.VIDEO_EMBEDS_OVERRIDE;
+        }
+      }catch(e){}
+      return EMBEDS;
+    }
+
+    function processMap(map){
+    Object.keys(map).forEach(function(tag){
+      var selector = '[data-video-tag="' + tag + '"]';
+      var nodes = document.querySelectorAll(selector);
+      nodes.forEach(function(node){
+        var width = node.getAttribute('data-video-width') || '560';
+        var height = node.getAttribute('data-video-height') || '315';
+        var url = map[tag];
+        if(!url) return;
+        // lazy-load: store the src and render a poster + play overlay
+        node.setAttribute('data-video-src', url);
+        node.innerHTML = '';
+        var card = document.createElement('div');
+        card.className = 'video-card';
+        var poster = document.createElement('div'); poster.className = 'video-poster';
+        var play = document.createElement('button'); play.className = 'play-overlay'; play.type = 'button'; play.textContent = 'Play';
+        card.appendChild(poster);
+        card.appendChild(play);
+        node.appendChild(card);
+      });
+    });
+  }
+
+    // Carousel controller for media-project entries
+    function createCarousel(){
+          var slides = Array.from(document.querySelectorAll('.media-project'));
+          if(!slides.length) return;
+          var thumbsWrap = document.createElement('div'); thumbsWrap.className = 'media-thumbnails';
+          slides.forEach(function(slide,i){
+            var b = document.createElement('button'); b.type='button'; b.className='media-thumb'; b.setAttribute('data-index', i);
+            b.textContent = slide.querySelector('h3') ? slide.querySelector('h3').textContent : ('Item '+(i+1));
+            thumbsWrap.appendChild(b);
+          });
+          var mediaSection = document.getElementById('media');
+          if(mediaSection) mediaSection.querySelector('.content-container').appendChild(thumbsWrap);
+
+          var current = 0, timer = null, playing = false, interval = 15000;
+          function show(i){
+            slides.forEach(function(s,idx){ s.classList.toggle('active', idx===i); });
+            document.querySelectorAll('.media-thumb').forEach(function(t){ t.classList.toggle('active', Number(t.getAttribute('data-index'))===i); });
+            current = i;
+          }
+          function next(){ if(playing) return; show((current+1)%slides.length); }
+          function start(){ stop(); timer = setInterval(next, interval); }
+          function stop(){ if(timer){ clearInterval(timer); timer=null; } }
+
+          document.querySelectorAll('.media-thumb').forEach(function(btn){ btn.addEventListener('click', function(){ show(Number(btn.getAttribute('data-index'))); start(); }); });
+
+          // wire play overlay behavior
+          slides.forEach(function(slide){
+            slide.classList.add('carousel-slide');
+            var playBtn = slide.querySelector('.play-overlay');
+            // if poster not created by mapping, sometimes play-overlay is elsewhere
+            if(!playBtn) playBtn = slide.querySelector('.video-card .play-overlay');
+            if(playBtn){
+              playBtn.addEventListener('click', function(){
+                var srcEl = slide.querySelector('[data-video-src]');
+                if(!srcEl) return;
+                var src = srcEl.getAttribute('data-video-src');
+                if(!src) return;
+                var autoplay = src + (src.indexOf('?')===-1 ? '?autoplay=1' : '&autoplay=1');
+                var iframe = document.createElement('iframe'); iframe.setAttribute('src', autoplay); iframe.setAttribute('allow','accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'); iframe.setAttribute('allowfullscreen',''); iframe.style.width='100%'; iframe.style.aspectRatio='16/9';
+                // insert iframe at top of media-project-content
+                var content = slide.querySelector('.media-project-content');
+                content.insertBefore(iframe, content.firstChild);
+                playing = true; stop();
+                // add stop control
+                var stopBtn = document.createElement('button'); stopBtn.type='button'; stopBtn.className='video-stop-btn'; stopBtn.textContent='Stop';
+                content.appendChild(stopBtn);
+                stopBtn.addEventListener('click', function(){ if(iframe.parentNode) iframe.parentNode.removeChild(iframe); stopBtn.remove(); playing=false; start(); });
+              });
+            }
+          });
+          show(0); start();
+        }
+
+    document.addEventListener('DOMContentLoaded', function(){
+      var mapping = getMapping();
+      processMap(mapping);
+      createCarousel();
+    });
+
+</script>
+
+    <!-- <script>
       (function(){
       var EMBEDS = {
         seedsofstem: 'https://www.youtube.com/embed/Aenj-Tktapc',
-        schwamb: 'https://www.youtube.com/embed/toAhX1-1f1Q?si=__TIw2tHp_RRfdXD'
+        schwamb: 'https://www.youtube.com/embed/toAhX1-1f1Q?si=__TIw2tHp_RRfdXD',
+        alien: 'https://www.youtube.com/embed/pvWnnvu02no'
       };
 
     function getMapping(){
@@ -174,17 +277,16 @@
         var height = node.getAttribute('data-video-height') || '315';
         var url = map[tag];
         if(!url) return;
-        var iframe = document.createElement('iframe');
-        iframe.setAttribute('src', url);
-        iframe.setAttribute('width', width);
-        iframe.setAttribute('height', height);
-        iframe.setAttribute('title', 'Video player for ' + tag);
-        iframe.setAttribute('frameborder', '0');
-        iframe.setAttribute('allow', 'accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share');
-        iframe.setAttribute('referrerpolicy', 'strict-origin-when-cross-origin');
-        iframe.setAttribute('allowfullscreen', '');
+        // lazy-load: store the src and render a poster + play overlay
+        node.setAttribute('data-video-src', url);
         node.innerHTML = '';
-        node.appendChild(iframe);
+        var card = document.createElement('div');
+        card.className = 'video-card';
+        var poster = document.createElement('div'); poster.className = 'video-poster';
+        var play = document.createElement('button'); play.className = 'play-overlay'; play.type = 'button'; play.textContent = 'Play';
+        card.appendChild(poster);
+        card.appendChild(play);
+        node.appendChild(card);
       });
     });
   }
@@ -194,20 +296,129 @@
       processMap(mapping);
     });
     })();
-    </script>
-    <script>
-      function toggleMenu() {
-        const navLinks = document.getElementById("navLinks");
-        navLinks.classList.toggle("active");
-      }
+    </script> -->
+    <!-- <script>
+      // Inject Read More buttons for mobile and handle toggle
+      (function(){
+        function initReadMore(){
+          var containers = document.querySelectorAll('.media-project-content');
+          containers.forEach(function(container){
+            var para = container.querySelector('p');
+            var video = container.querySelector('iframe, .video-placeholder');
+              if(!para || !video) return;
+              // Only add Read More on small screens
+              var isMobile = window.matchMedia('(max-width: 768px)').matches;
+              if(!isMobile){
+                // remove any existing button/expanded state if present
+                var existing = container.querySelector('.read-more-btn');
+                if(existing) existing.remove();
+                container.classList.remove('expanded');
+                para.removeAttribute('tabindex');
+                return;
+              }
+              // create button if not present
+              if(container.querySelector('.read-more-btn')) return;
+              var btn = document.createElement('button');
+              btn.className = 'read-more-btn';
+              btn.type = 'button';
+              btn.setAttribute('aria-expanded','false');
+              btn.textContent = 'Read More';
+              // place button between video and paragraph on mobile ordering (order will handle visual)
+              video.after(btn);
+              btn.addEventListener('click', function(){
+                var expanded = container.classList.toggle('expanded');
+                btn.setAttribute('aria-expanded', expanded ? 'true' : 'false');
+                btn.textContent = expanded ? 'Hide' : 'Read More';
+                // for accessibility, focus paragraph when expanded
+                if(expanded){
+                  para.setAttribute('tabindex','-1');
+                  para.focus();
+                } else {
+                  para.removeAttribute('tabindex');
+                }
+              });
+          });
+        }
 
-      // Highlight active nav link on scroll
+        // initialize on DOM ready
+        document.addEventListener('DOMContentLoaded', initReadMore);
+
+        // also re-init when window resizes in case dynamic content changes
+        window.addEventListener('resize', function(){
+          // small debounce
+          clearTimeout(window.__readmore_timer);
+          window.__readmore_timer = setTimeout(initReadMore, 200);
+        });
+      })();
+      </script> -->
+    <!-- <script>
+        // Carousel controller for media-project entries
+        (function(){
+          var slides = Array.from(document.querySelectorAll('.media-project'));
+          if(!slides.length) return;
+          var thumbsWrap = document.createElement('div'); thumbsWrap.className = 'media-thumbnails';
+          slides.forEach(function(slide,i){
+            var b = document.createElement('button'); b.type='button'; b.className='media-thumb'; b.setAttribute('data-index', i);
+            b.textContent = slide.querySelector('h3') ? slide.querySelector('h3').textContent : ('Item '+(i+1));
+            thumbsWrap.appendChild(b);
+          });
+          var mediaSection = document.getElementById('media');
+          if(mediaSection) mediaSection.querySelector('.content-container').appendChild(thumbsWrap);
+
+          var current = 0, timer = null, playing = false, interval = 15000;
+          function show(i){
+            slides.forEach(function(s,idx){ s.classList.toggle('active', idx===i); });
+            document.querySelectorAll('.media-thumb').forEach(function(t){ t.classList.toggle('active', Number(t.getAttribute('data-index'))===i); });
+            current = i;
+          }
+          function next(){ if(playing) return; show((current+1)%slides.length); }
+          function start(){ stop(); timer = setInterval(next, interval); }
+          function stop(){ if(timer){ clearInterval(timer); timer=null; } }
+
+          document.querySelectorAll('.media-thumb').forEach(function(btn){ btn.addEventListener('click', function(){ show(Number(btn.getAttribute('data-index'))); start(); }); });
+
+          // wire play overlay behavior
+          slides.forEach(function(slide){
+            slide.classList.add('carousel-slide');
+            var playBtn = slide.querySelector('.play-overlay');
+            // if poster not created by mapping, sometimes play-overlay is elsewhere
+            if(!playBtn) playBtn = slide.querySelector('.video-card .play-overlay');
+            if(playBtn){
+              playBtn.addEventListener('click', function(){
+                var srcEl = slide.querySelector('[data-video-src]');
+                if(!srcEl) return;
+                var src = srcEl.getAttribute('data-video-src');
+                if(!src) return;
+                var autoplay = src + (src.indexOf('?')===-1 ? '?autoplay=1' : '&autoplay=1');
+                var iframe = document.createElement('iframe'); iframe.setAttribute('src', autoplay); iframe.setAttribute('allow','accelerometer; autoplay; clipboard-write; encrypted-media; gyroscope; picture-in-picture; web-share'); iframe.setAttribute('allowfullscreen',''); iframe.style.width='100%'; iframe.style.aspectRatio='16/9';
+                // insert iframe at top of media-project-content
+                var content = slide.querySelector('.media-project-content');
+                content.insertBefore(iframe, content.firstChild);
+                playing = true; stop();
+                // add stop control
+                var stopBtn = document.createElement('button'); stopBtn.type='button'; stopBtn.className='video-stop-btn'; stopBtn.textContent='Stop';
+                content.appendChild(stopBtn);
+                stopBtn.addEventListener('click', function(){ if(iframe.parentNode) iframe.parentNode.removeChild(iframe); stopBtn.remove(); playing=false; start(); });
+              });
+            }
+          });
+
+          show(0); start();
+        })();
+      </script> -->
+    <!-- <script>
+        function toggleMenu() {
+          const navLinksEl = document.getElementById("navLinks");
+          navLinksEl.classList.toggle("active");
+        }
+
+      // Highlight active nav link on scroll and hide title on scroll-down
       const sections = document.querySelectorAll("section");
       const navLinks = document.querySelectorAll(".nav-link");
+      let lastScrollY = window.scrollY || 0;
 
       window.addEventListener("scroll", () => {
         let current = "";
-
         sections.forEach((section) => {
           const sectionTop = section.offsetTop;
           const sectionHeight = section.clientHeight;
@@ -221,6 +432,24 @@
           if (link.getAttribute("href") === `#${current}`) {
             link.classList.add("active");
           }
+        });
+
+        // Hide title and full nav when scrolling down; reveal on scroll up
+        const headerEl = document.querySelector('header');
+        const currentY = window.scrollY || 0;
+        if (currentY > lastScrollY && currentY > 80) {
+          headerEl.classList.add('hide-title');
+        } else if (currentY < lastScrollY - 10) {
+          headerEl.classList.remove('hide-title');
+        }
+        lastScrollY = currentY <= 0 ? 0 : currentY;
+      });
+
+      // Close mobile nav when a link is clicked
+      document.querySelectorAll('#navLinks a').forEach(function(a){
+        a.addEventListener('click', function(){
+          var ul = document.getElementById('navLinks');
+          if(ul) ul.classList.remove('active');
         });
       });
 
@@ -244,6 +473,6 @@
       document.querySelectorAll(".content-container").forEach((container) => {
         observer.observe(container);
       });
-    </script>
+    </script> -->
   </body>
 </html>
